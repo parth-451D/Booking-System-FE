@@ -1,5 +1,5 @@
 import Navbar from "@/src/components/Header";
-import { persistor, store } from "@/src/redux";
+import { persistor, store } from "@/src/redux/store";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
