@@ -1,10 +1,13 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
-import RoutPath from "../utils/routes";
 import Link from "next/link";
+import { useAppSelector } from "../redux/hooks";
+import { selectIsLogin, selectUserProfileData } from "../redux/reducers/userReducer";
 
 const Home = () => {
-  const router = useRouter();
+  const isLogin = useAppSelector(selectIsLogin);
+  const profile = useAppSelector(selectUserProfileData);
+  console.log(isLogin, profile)
+
   return (
     <>
       <div className="flex flex-wrap container p-8 mx-auto xl:px-0 h-[54rem]">
@@ -21,7 +24,7 @@ const Home = () => {
 
             <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
               <Link
-                href="/login"
+                href={isLogin ? "/movies" : "/login"}
                 className="px-8 py-4 text-lg font-medium text-center text-white bg-indigo-600 rounded-md"
               >
                 Start Booking

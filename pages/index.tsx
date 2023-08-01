@@ -1,5 +1,3 @@
-import Navbar from "@/src/components/Header";
-import Home from "@/src/components/Home";
 import { Inter } from "next/font/google";
 import HomePage from "./home";
 

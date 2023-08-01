@@ -1,9 +1,34 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
+import {
+  selectIsLogin,
+  setIsLogin,
+  setProfileData,
+} from "../redux/reducers/userReducer";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
-  const navigation = ["Movies", "Upcoming Events", "My Booking"];
+  const navigation = [
+    { name: "Movies", path: "/movies" },
+    { name: "Upcoming Events", path: "/events" },
+    { name: "My Booking", path: "/my-bookings" },
+  ];
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const isLogin = useAppSelector(selectIsLogin);
+
+  const handleLogout = () => {
+    if (!isLogin) {
+      router.push("/login");
+      return;
+    } else {
+      dispatch(setIsLogin(false));
+      dispatch(setProfileData(null));
+      router.push("/");
+    }
+  };
 
   return (
     <div className="w-full">
@@ -55,15 +80,16 @@ const Navbar = () => {
 
                 <Disclosure.Panel className="flex flex-wrap w-full my-5 lg:hidden">
                   <>
-                    {navigation.map((item, index) => (
-                      <Link
-                        key={index}
-                        href="/"
-                        className="w-full px-4 py-2 -ml-4 text-gray-500 rounded-md dark:text-gray-300 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 dark:focus:bg-gray-800 focus:outline-none"
-                      >
-                        {item}
-                      </Link>
-                    ))}
+                    {isLogin &&
+                      navigation.map((item, index) => (
+                        <Link
+                          key={index}
+                          href={item.path}
+                          className="w-full px-4 py-2 -ml-4 text-gray-500 rounded-md dark:text-gray-300 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 dark:focus:bg-gray-800 focus:outline-none"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
                     <Link
                       href="/"
                       className="w-full px-6 py-2 mt-3 text-center text-white bg-indigo-600 rounded-md lg:ml-5"
@@ -80,26 +106,26 @@ const Navbar = () => {
         {/* menu  */}
         <div className="hidden text-center lg:flex lg:items-center">
           <ul className="items-center justify-end flex-1 pt-6 list-none lg:pt-0 lg:flex">
-            {navigation.map((menu, index) => (
-              <li className="mr-3 nav__item" key={index}>
-                <Link
-                  href="/"
-                  className="inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
-                >
-                  {menu}
-                </Link>
-              </li>
-            ))}
+            {isLogin &&
+              navigation.map((menu, index) => (
+                <li className="mr-3 nav__item" key={index}>
+                  <Link
+                    href={menu.path}
+                    className="inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
+                  >
+                    {menu.name}
+                  </Link>
+                </li>
+              ))}
           </ul>
         </div>
-
         <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-          <Link
-            href="/"
-            className="px-6 py-2 text-white bg-indigo-600 rounded-md md:ml-5"
+          <span
+            className="px-6 py-2 text-white bg-indigo-600 rounded-md md:ml-5 hover:cursor-pointer"
+            onClick={() => handleLogout()}
           >
-            Profile
-          </Link>
+            {isLogin ? "Logout" : "Login"}
+          </span>
         </div>
       </nav>
     </div>
