@@ -8,6 +8,7 @@ import {
 } from "../redux/reducers/userReducer";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useRouter } from "next/router";
+import CommonButton from "./CommonButton";
 
 const Navbar = () => {
   const navigation = [
@@ -42,14 +43,14 @@ const Navbar = () => {
                   <span className="flex items-center space-x-2 text-2xl font-medium text-indigo-500 dark:text-gray-100">
                     <span>
                       <Image
-                        src="https://i0.wp.com/siliconspectra.com/wp-content/uploads/2020/01/download-1579320495lcp48.jpg?fit=400%2C400&ssl=1"
+                        src="https://d3pa24hn9l1c2y.cloudfront.net/user/themes/quark/images/icon.svg"
                         alt="N"
                         width="32"
                         height="32"
                         className="w-8"
                       />
                     </span>
-                    <span>Book My Show</span>
+                    <span>Book Your Show</span>
                   </span>
                 </Link>
 
@@ -119,13 +120,11 @@ const Navbar = () => {
               ))}
           </ul>
         </div>
-        <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-          <span
-            className="px-6 py-2 text-white bg-indigo-600 rounded-md md:ml-5 hover:cursor-pointer"
-            onClick={() => handleLogout()}
-          >
-            {isLogin ? "Logout" : "Login"}
-          </span>
+        <div
+          className="hidden mr-3 space-x-4 lg:flex nav__item md:ml-5"
+          onClick={() => handleLogout()}
+        >
+          <CommonButton text={isLogin ? "Logout" : "Login"} />
         </div>
       </nav>
     </div>

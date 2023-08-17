@@ -1,11 +1,13 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import MovieService from "../service/Movie";
+import { useRouter } from "next/router";
 
 const MovieList = () => {
   const [moviesList, setMoviesList] = useState([]);
-  const getMoviesData = async () => {
-    await MovieService.getMovies()
+  const router = useRouter()
+  const getMoviesData = () => {
+    MovieService.getMovies()
       .then((res: any) => {
         setMoviesList(res.result);
       })
@@ -30,54 +32,47 @@ const MovieList = () => {
         {moviesList &&
           moviesList?.map((ele: any, index: number) => {
             return (
-              <div
-                className="card1 
-              "
-                key={index}
-              >
-                <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                  <div
-                    className="relative overflow-hidden bg-cover bg-no-repeat"
-                    data-te-ripple-init
-                    data-te-ripple-color="light"
-                  >
-                    <Image
-                      className="rounded-t-lg "
-                      height="100"
-                      width="100"
-                      src="https://tecdn.b-cdn.net/img/new/standard/nature/186.jpg"
-                      alt=""
-                    />
-                    <a href="#!">
-                      <div className="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-[hsla(0,0%,98%,0.15)] bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-100"></div>
+              <>
+                <div className="flex flex-row h-full">
+                  <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <a href="#">
+                      <Image
+                        className="rounded-t-lg h-1/2 w-full"
+                        src="https://tecdn.b-cdn.net/img/new/standard/nature/186.jpg"
+                        alt=""
+                        width={100}
+                        height={100}
+                      />
                     </a>
-                  </div>
-                  <div className="p-6 shadow-sm shadow-black/30 dark:shadow-black/50">
-                    <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                      {ele?.movieName}
-                    </h5>
-                    <ul>
-                      <li>
-                        <strong>Cast:&nbsp;</strong>
-                        {ele?.cast?.map((item: any) => item + "," + " ")}
-                      </li>
-                      <li>
-                        <strong>Director: &nbsp;</strong>
-                        {ele?.director}
-                      </li>
-                      <li>
-                        <strong>Duration: &nbsp;</strong>
-                        {ele?.duration}
-                      </li>
-                    </ul>
-                    <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-                      <span className="px-6 py-2 text-white bg-indigo-600 rounded-md hover:cursor-pointer mt-4">
-                        Book Tickets
-                      </span>
+                    <div className="p-5">
+                      <a href="#">
+                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                          {ele?.movieName}
+                        </h5>
+                      </a>
+                      <ul>
+                        <li>
+                          <strong>Cast:&nbsp;</strong>
+                          {ele?.cast?.map((item: any) => item + "," + " ")}
+                        </li>
+                        <li>
+                          <strong>Director: &nbsp;</strong>
+                          {ele?.director}
+                        </li>
+                        <li>
+                          <strong>Duration: &nbsp;</strong>
+                          {ele?.duration}
+                        </li>
+                      </ul>
+                      <div className="hidden mr-3 space-x-4 lg:flex nav__item" onClick={() => router.push(`/theaters?movieName=${ele.movieName}`)}>
+                        <span className="px-6 py-2 text-white bg-indigo-600 rounded-md hover:cursor-pointer mt-4">
+                          Book Tickets
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </>
             );
           })}
       </div>
