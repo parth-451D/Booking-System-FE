@@ -5,10 +5,16 @@ import arrowright from "../assets/img/arrowright.svg";
 import { useRouter } from "next/router";
 import MovieService from "../service/Movie";
 import moment from "moment";
+import {
+  selectMovieData,
+  selectTheaterData,
+  setSlotData,
+} from "../redux/reducers/currentBookingReducer";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const SlotLayout = () => {
   const router = useRouter();
-  const { movieName, theaterId } = router.query;
+  const dispatch = useAppDispatch();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [dates, setDates] = useState<[{ date: any }]>([{ date: null }]);
   const [slots, setSlots] = useState([]);
@@ -22,6 +28,9 @@ const SlotLayout = () => {
         })
         .catch((err) => console.log(err));
   };
+
+  const movieName = useAppSelector(selectMovieData).movieName;
+  const theaterId = useAppSelector(selectTheaterData).id;
 
   useEffect(() => {
     const APIcalls = async () => {
@@ -59,6 +68,22 @@ const SlotLayout = () => {
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev === dates.length - 1 ? 0 : prev + 1));
+  };
+
+  const onClickHandler = (ele: any) => {
+    dispatch(
+      setSlotData({
+        slotId: ele?._id,
+        startTime: moment(
+          ele?.startTime.toString().length === 4
+            ? ele?.startTime
+            : `0${ele?.startTime.toString()}`,
+          "HHmm"
+        ).format("hh:mm A"),
+        date: dates[currentSlide]?.date,
+      })
+    );
+    router.push(`/seat-layout`);
   };
 
   return (
@@ -143,9 +168,7 @@ const SlotLayout = () => {
                 key={index + 1}
                 className="show max-w-3xl w-1/3 bg-white border-2 border-indigo-600  flex justify-center items-center rounded-lg m-auto pt-5 pb-5 hover:bg-gray-300 hover:cursor-pointer"
                 onClick={() => {
-                  router.push(
-                    `/seat-layout?movieName=${movieName}&theaterId=${theaterId}&slotId=${slot?._id}`
-                  );
+                  onClickHandler(slot);
                 }}
               >
                 <div className="flex flex-col">

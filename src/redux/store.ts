@@ -3,6 +3,8 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import thunk from "redux-thunk";
 import userReducer from "./reducers/userReducer";
+import seatReducer from "./reducers/seatReducer";
+import currentBookingReducer from "./reducers/currentBookingReducer";
 
 const persistConfig = {
   key: "root",
@@ -11,6 +13,8 @@ const persistConfig = {
 
 const allReducers = combineReducers({
   user: userReducer,
+  seat: seatReducer,
+  currentBooking: currentBookingReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, allReducers);

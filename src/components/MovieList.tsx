@@ -2,10 +2,13 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import MovieService from "../service/Movie";
 import { useRouter } from "next/router";
+import { useAppDispatch } from "../redux/hooks";
+import { setMovieData } from "../redux/reducers/currentBookingReducer";
 
 const MovieList = () => {
   const [moviesList, setMoviesList] = useState([]);
-  const router = useRouter()
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const getMoviesData = () => {
     MovieService.getMovies()
       .then((res: any) => {
@@ -14,6 +17,15 @@ const MovieList = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const onClickHandler = (ele: any) => {
+    dispatch(
+      setMovieData({
+        movieName: ele?.movieName,
+      })
+    );
+    router.push(`/theaters`);
   };
 
   useEffect(() => {
@@ -64,7 +76,10 @@ const MovieList = () => {
                           {ele?.duration}
                         </li>
                       </ul>
-                      <div className="hidden mr-3 space-x-4 lg:flex nav__item" onClick={() => router.push(`/theaters?movieName=${ele.movieName}`)}>
+                      <div
+                        className="hidden mr-3 space-x-4 lg:flex nav__item"
+                        onClick={() => onClickHandler(ele)}
+                      >
                         <span className="px-6 py-2 text-white bg-indigo-600 rounded-md hover:cursor-pointer mt-4">
                           Book Tickets
                         </span>

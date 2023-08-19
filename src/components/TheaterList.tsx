@@ -1,10 +1,15 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MovieService from "../service/Movie";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { selectMovieData, setTheaterData } from "../redux/reducers/currentBookingReducer";
 
 const TheaterList = () => {
   const router = useRouter();
-  const { movieName } = router.query;
+  const dispatch = useAppDispatch()
+  // const { movieName } = router.query;
+  const movieName = useAppSelector(selectMovieData).movieName
+  console.log("movieName", movieName)
   const [theaterList, setTheaterList] = useState([]);
 
   const getTheaterList = () => {
@@ -14,12 +19,22 @@ const TheaterList = () => {
         .catch((err) => console.log(err));
   };
 
+  const onClickHandler = (ele: any) => {
+    console.log("ele", ele)
+    dispatch(setTheaterData({
+      name: ele.name,
+      address: ele.address,
+      id: ele._id
+    }))
+    router.push(`/slot-layout`);
+  };
+
   useEffect(() => {
     const APIcalls = async () => {
       await getTheaterList();
     };
     APIcalls();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieName]);
 
   return (
@@ -52,7 +67,10 @@ const TheaterList = () => {
                       </li>
                     </ul>
                     <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-                      <span className="px-6 py-2 text-white bg-indigo-600 rounded-md hover:cursor-pointer mt-4" onClick={() => router.push(`/slot-layout?movieName=${movieName}&theaterId=${ele?._id}`)}>
+                      <span
+                        className="px-6 py-2 text-white bg-indigo-600 rounded-md hover:cursor-pointer mt-4"
+                        onClick={() => onClickHandler(ele)}
+                      >
                         Book Tickets
                       </span>
                     </div>
